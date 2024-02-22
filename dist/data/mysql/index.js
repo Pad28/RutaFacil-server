@@ -9,16 +9,16 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const routes_1 = require("./presentation/routes");
-const data_1 = require("./data");
-const config_1 = require("./config");
-const server_1 = require("./presentation/server");
-(() => __awaiter(void 0, void 0, void 0, function* () {
-    yield (0, data_1.connetionDB)();
-    const server = new server_1.Server({
-        port: config_1.envs.PORT,
-        publicPaht: config_1.envs.PUBLIC_PATH,
-        routes: routes_1.AppRoutes.routes
-    });
-    server.start();
-}))();
+exports.connetionDB = exports.prisma = void 0;
+const client_1 = require("@prisma/client");
+exports.prisma = new client_1.PrismaClient();
+const connetionDB = () => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        exports.prisma.$connect();
+        console.log('Base de datos conectada');
+    }
+    catch (error) {
+        throw error;
+    }
+});
+exports.connetionDB = connetionDB;

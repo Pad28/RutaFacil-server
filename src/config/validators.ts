@@ -26,6 +26,12 @@ export class Validators {
         this.data[key] = parseInt(this.data[key]);
     }
 
+    public isFloat(key: string) {
+        this.isRequired(key);
+        if(isNaN(this.data[key])) throw `${key} no es un numero valido`;
+        this.data[key] = parseFloat(this.data[key]);
+    }
+
     public capitalizar(key: string) {
         this.isRequired(key);
         const str = this.data[key] as string;
@@ -43,5 +49,21 @@ export class Validators {
     public isBoolean(key: string) {
         if( typeof this.data[key] !== 'boolean') throw `${key} no es un boolean valido`;        
     }
+    
+    public toUpperCase(key: string) {
+        this.isRequired(key);
+        this.data[key] = (this.data[key] as string).toUpperCase();
+    }
 
+    public isDate(key: string) {
+        this.isRequired(key);
+        const newDate = new Date(this.data[key]);
+        if(newDate.toString() === 'Invalid Date') throw `${key} no es una fecha valida`;
+        this.data[key] = newDate;
+    }
+
+    public checkPattern(key: string, pattern: RegExp) {
+        this.isRequired(key);
+        if(!pattern.test(this.data[key])) throw `${key} no valido`;
+    }
 }

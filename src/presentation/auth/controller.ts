@@ -22,6 +22,6 @@ export class AuthController extends AppController {
         
         this.authService.loginUser(loginUserDto)
             .then(result => res.json({ ...result }))
-            .catch(error => this.tirggerError(error, res));
+            .catch(error => this.triggerError(error, res));
     }
 }

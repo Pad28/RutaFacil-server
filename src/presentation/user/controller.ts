@@ -1,12 +1,22 @@
 import { Request, Response } from "express";
 import { AppController } from "../controller";
-import { CreateUserDto, UpdateUserDto } from "../../domain";
+import { CreateUserDto, PaginationDto, UpdateUserDto } from "../../domain";
 import { UserService } from "../services/user.service";
 
 export class UserController extends AppController {
     constructor(
         private readonly userService: UserService,
-    ) { super() }
+    ) { super(); }
+
+    public getUsers = (req: Request, res: Response) => {
+        const {page = 1, limit = 10} = req.query;
+        const [error, paginationDto] = PaginationDto.create(+page, +limit);
+        if(error || !paginationDto) return res.status(400).json({ error });
+
+        this.userService.getUsers(paginationDto)
+            .then(users => res.json(users))
+            .catch(error => this.triggerError(error, res));
+    }
 
     public createUser = (req: Request, res: Response) => {
         const [error, createUserDto] = CreateUserDto.create(req.body);
@@ -14,7 +24,7 @@ export class UserController extends AppController {
         
         this.userService.createUser(createUserDto)
             .then(user => res.json(user))
-            .catch(error => this.tirggerError(error, res));
+            .catch(error => this.triggerError(error, res));
     }
 
     public updateUser =  (req: Request, res: Response) => {
@@ -28,6 +38,6 @@ export class UserController extends AppController {
 
         this.userService.updateUser(updateUserDto)
             .then(user => res.json(user))
-            .catch(error => this.tirggerError(error, res));
+            .catch(error => this.triggerError(error, res));
     }
 }

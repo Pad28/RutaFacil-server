@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsnd --respawn --clear ./src/app.ts",
-    "build": "rimraf ./dist && tsc",
+    "build": "rimraf ./dist && tsc && npx prisma migrate deploy",
     "start": "npm run build && node ./dist/app.js"
   },
   "keywords": [],
