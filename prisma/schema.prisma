@@ -32,10 +32,10 @@ model Usuario {
   estado    Boolean     @default(true)
   rol       Rol_Usuario @default(USER)
 
-  ruta_guardada  RutaGuardada[]
-  vehiculo_fk    Vehiculo?
-  reporte_fk     Reporte[]
-  notificaion_fk Notificacion[]
+  ruta_guardada RutaGuardada[]
+  vehiculo      Vehiculo?
+  reporte       Reporte[]
+  notificaion   Notificacion[]
 }
 
 model Ruta {
@@ -61,8 +61,8 @@ model Horario {
   dia_hora    DateTime
   numero_ruta Int
 
-  id_ruta    String
-  ruta_id_fk Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
+  id_ruta String
+  fk_ruta Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
 }
 
 model Parada {
@@ -73,31 +73,28 @@ model Parada {
   longitud Decimal?
   latitud  Decimal?
 
-  id_ruta    String
-  ruta_id_fk Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
+  id_ruta String
+  fk_ruta Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
 }
 
 model Vehiculo {
-  numero           Int     @id @default(autoincrement())
-  nombre_chofer    String  @db.VarChar(20)
-  apellidos_chofer String? @db.VarChar(20)
-  numero_ruta      Int
+  numero Int @id @default(autoincrement())
 
-  id_usuario String  @unique @db.VarChar(36)
-  usuario_fk Usuario @relation(fields: [id_usuario], references: [id])
+  id_chofer String  @unique @db.VarChar(36)
+  fk_chofer Usuario @relation(fields: [id_chofer], references: [id])
 
-  id_ruta    String
-  ruta_id_fk Ruta   @relation(fields: [id_ruta], references: [id])
+  id_ruta String
+  fk_ruta Ruta   @relation(fields: [id_ruta], references: [id])
 }
 
 model RutaGuardada {
   id String @id @default(uuid())
 
   id_usuario String  @db.VarChar(36)
-  usuario_fk Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade)
+  fk_usuario Usuario @relation(fields: [id_usuario], references: [id], onDelete: Cascade)
 
   id_ruta String @unique @db.VarChar(36)
-  ruta_fk Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
+  fk_ruta Ruta   @relation(fields: [id_ruta], references: [id], onDelete: Cascade)
 }
 
 model Reporte {
@@ -107,7 +104,7 @@ model Reporte {
   descripcion String       @db.VarChar(200)
 
   id_usuario String  @db.VarChar(36)
-  usuario_fk Usuario @relation(fields: [id_usuario], references: [id])
+  fk_usuario Usuario @relation(fields: [id_usuario], references: [id])
 }
 
 model Notificacion {

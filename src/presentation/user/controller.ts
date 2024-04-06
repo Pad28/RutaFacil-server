@@ -1,12 +1,22 @@
 import { Request, Response } from "express";
 import { AppController } from "../controller";
-import { CreateUserDto, PaginationDto, UpdateUserDto } from "../../domain";
+import { CreateUserDto, GetUserDto, PaginationDto, UpdateUserDto } from "../../domain";
 import { UserService } from "../services/user.service";
 
 export class UserController extends AppController {
     constructor(
         private readonly userService: UserService,
     ) { super(); }
+
+    public getUser = (req: Request, res: Response) => {
+        const { id } = req.params;
+        const [error, getUserDto] = GetUserDto.create({ id });
+        if(error || !getUserDto) return res.status(400).json({ error });
+
+        this.userService.getUser(getUserDto)
+            .then(user => res.json(user))
+            .catch(error => this.triggerError(error, res));
+    }
 
     public getUsers = (req: Request, res: Response) => {
         const {page = 1, limit = 10} = req.query;

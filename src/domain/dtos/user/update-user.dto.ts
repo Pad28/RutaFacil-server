@@ -1,21 +1,13 @@
 import { Validators } from "../../../config";
+import { AppDto } from "../share/AppDto";
 
-export class UpdateUserDto {
+export class UpdateUserDto extends AppDto {
     private constructor(
         public readonly id: string,    
         public readonly nombre?: string,    
         public readonly apellidos?: string, 
         public readonly password?: string, 
-    ) {}
-
-    get values() {
-        const obj: {[key: string]: any} = {};
-        for(const k in this) {
-            if(this[k]) obj[k] = this[k];
-        }
-
-        return obj;
-    }
+    ) { super(); }
 
     static create(obj: {[key: string]: any}): [string?, UpdateUserDto?] {
         try {

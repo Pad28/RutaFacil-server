@@ -1,9 +1,19 @@
 import { bcryptjsAdapter } from "../../config";
 import { prisma } from "../../data";
-import { CreateUserDto, CustomError, PaginationDto, UpdateUserDto } from "../../domain";
+import { CreateUserDto, CustomError, GetUserDto, PaginationDto, UpdateUserDto } from "../../domain";
 
 export class UserService {
     constructor() {}
+
+    public async getUser(getUserDto: GetUserDto) {
+        const { usuario } = prisma;
+        const existUser = await usuario.findUnique({ where: { id: getUserDto.id } });
+        
+        if(!existUser || !existUser.estado) throw CustomError.badRequest(`Usuario no existente`);
+        if(existUser.id !== getUserDto.id) throw CustomError.unauthorized(`No autorizado`);
+
+        return existUser;
+    }
 
     public async getUsers(paginationDto: PaginationDto) {
         const { page, limit } = paginationDto;
@@ -41,6 +51,10 @@ export class UserService {
     public async updateUser(updateUserDto: UpdateUserDto) {
         const { usuario } = prisma;
         const data = updateUserDto.values;
+
+        const existUser = await usuario.findUnique({ where: { id: updateUserDto.id } });
+        if(!existUser) throw CustomError.badRequest('Usuario no existe');
+        if(!existUser.estado) throw CustomError.badRequest('Usuario no existe');
 
         if(data.password) {
             data.password = bcryptjsAdapter.hash(data.password);

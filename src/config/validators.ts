@@ -5,11 +5,6 @@ export class Validators {
         private readonly data: {[key: string]: any}
     ) {}
 
-    public isEmail(key: string) {
-        const regular = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
-        if(!regular.test(this.data[key])) throw 'Correo no valido';
-    }
-
     public requiredKeys( ...keys: string[]) {
         keys.forEach(k => {
             if(!this.data[k]) throw `${k} faltante`;
@@ -18,6 +13,18 @@ export class Validators {
 
     public isRequired(key: string) {
         if(!this.data[key]) throw `${key} faltante`;
+    }
+
+    public isEmail(key: string) {
+        this.isRequired(key);
+        const regular = /^(([^<>()\[\]\\.,;:\s@”]+(\.[^<>()\[\]\\.,;:\s@”]+)*)|(“.+”))@((\[[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}\.[0–9]{1,3}])|(([a-zA-Z\-0–9]+\.)+[a-zA-Z]{2,}))$/;
+        if(!regular.test(this.data[key])) throw `${key} no es un correo valido`;
+    }
+
+    public isUIID(key: string) {
+        this.isRequired(key);
+        const relugar = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+        if(!relugar.test(this.data[key])) throw `${key} no es un UUID valido`;
     }
 
     public isNumber(key: string) {
@@ -61,9 +68,33 @@ export class Validators {
         if(newDate.toString() === 'Invalid Date') throw `${key} no es una fecha valida`;
         this.data[key] = newDate;
     }
-
+    
     public checkPattern(key: string, pattern: RegExp) {
         this.isRequired(key);
         if(!pattern.test(this.data[key])) throw `${key} no valido`;
+    }
+
+    public ifExistCapitalizar(key: string) {
+        if(this.data[key] && this.data[key].lenght !== 0) this.capitalizar(key);
+    }
+
+    public ifExistIsNumber(key: string) {
+        if(this.data[key]) this.isNumber(key);
+    }
+
+    public ifExistIsFloat(key: string) {
+        if(this.data[key]) this.isFloat(key);
+    }
+
+    public ifExistIsDate(key: string) {
+        if(this.data[key]) this.isDate(key);
+    }
+
+    public ifExistUpperCase(key: string) {
+        if(this.data[key]) this.toUpperCase(key);
+    }
+    
+    public ifExistIsUUID(key: string) {
+        if(this.data[key]) this.isUIID(key);
     }
 }

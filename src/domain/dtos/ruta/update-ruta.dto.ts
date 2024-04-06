@@ -26,12 +26,12 @@ export class UpdateRutaDto {
             validators.isRequired('numero');
             validators.isNumber('numero');
 
-            if(obj.destino) validators.capitalizar('destino');
-            if(obj.origen) validators.capitalizar('origen');
-            if(obj.longitudDestino) validators.isFloat('longitudDestino');
-            if(obj.latitudDestino) validators.isFloat('latitudDestino');
-            if(obj.longitudOrigen) validators.isFloat('longitudOrigen');
-            if(obj.latitudOrigen) validators.isFloat('latitudOrigen');
+            validators.ifExistCapitalizar('destino');
+            validators.ifExistCapitalizar('origen');
+            validators.ifExistIsFloat('longitudDestino');
+            validators.ifExistIsFloat('latitudDestino');
+            validators.ifExistIsFloat('longitudOrigen');
+            validators.ifExistIsFloat('latitudOrigen');
             
             return [undefined, new UpdateRutaDto(
                 obj.numero,

@@ -35,8 +35,11 @@ export class RutaService {
         const { ruta } = prisma;
         const { numero, ...data } = updateRutaDto.values;
 
+        const existRuta = await ruta.findUnique({ where: { numero } });
+        if(!existRuta) throw CustomError.badRequest(`La ruta con numero ${numero} no existe`);
+
         return await ruta.update({ 
-            where: { numero: updateRutaDto.numero },
+            where: { numero },
             data
         }); 
     }
